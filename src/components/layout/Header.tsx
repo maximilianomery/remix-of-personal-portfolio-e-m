@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useScrollPosition } from '@/hooks/useScrollPosition';
 import { ThemeToggle } from './ThemeToggle';
+import { LanguageToggle } from './LanguageToggle';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import { photographerInfo } from '@/data/photographer';
@@ -16,12 +17,20 @@ export function Header() {
 
   const isTransparent = location.pathname === '/' && !isScrolled;
 
-  const navLinks = [
-    { name: 'Inicio', path: '/' },
-    { name: 'Portafolio', path: '/portfolio' },
-    { name: 'Sobre mí', path: '/about' },
-    { name: 'Contacto', path: '/contact' },
-  ];
+  const isEnglish = location.pathname.startsWith('/en');
+  const navLinks = isEnglish
+    ? [
+        { name: 'Home', path: '/en' },
+        { name: 'Portfolio', path: '/en/portfolio' },
+        { name: 'About', path: '/en/about' },
+        { name: 'Contact', path: '/en/contact' },
+      ]
+    : [
+        { name: 'Inicio', path: '/' },
+        { name: 'Portafolio', path: '/portfolio' },
+        { name: 'Sobre mí', path: '/about' },
+        { name: 'Contacto', path: '/contact' },
+      ];
 
   return (
     <motion.header
@@ -65,7 +74,12 @@ export function Header() {
                 >
                   <Link
                     to={link.path}
-                    className="relative text-lg leading-7 font-light tracking-wide text-white transition-colors duration-300 hover:text-white/80"
+                    className={cn(
+                      'relative text-lg leading-7 font-light tracking-wide transition-colors duration-300',
+                      isTransparent
+                        ? 'text-white hover:text-white/80'
+                        : 'text-foreground hover:text-foreground/80'
+                    )}
                   >
                     {link.name}
                     {location.pathname === link.path && (
@@ -82,13 +96,15 @@ export function Header() {
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.4, delay: 0.4 }}
-              className="flex items-center gap-1"
+              className="flex items-center gap-3"
             >
+              <LanguageToggle />
               <ThemeToggle />
             </motion.div>
           </nav>
 
           <div className="md:hidden flex items-center gap-2">
+            <LanguageToggle />
             <ThemeToggle />
             <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
               <SheetTrigger asChild>
