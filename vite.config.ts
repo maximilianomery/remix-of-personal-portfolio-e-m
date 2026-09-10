@@ -9,7 +9,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
-    allowedHosts: ["sb-1x576lbz1jc4.vercel.run"],
+    allowedHosts: true,
   },
   plugins: [tailwindcss(), react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
